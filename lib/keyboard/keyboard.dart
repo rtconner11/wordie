@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wordie/colors.dart';
 import 'package:wordie/keyboard/keys/keys.dart';
 
 class WordieKeyboard extends StatelessWidget {
@@ -24,8 +25,14 @@ class WordieKeyboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildRow(_buildKeys(['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'])),
-        _buildRow(_buildKeys(['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'])),
+        _buildRow(
+          _buildKeys(['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P']),
+        ),
+        _buildRow([
+          const Spacer(),
+          ..._buildKeys(['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'], flex: 2),
+          const Spacer(),
+        ]),
         _buildRow([
           EnterKey(onEnter: _enterHandler, flex: 3),
           ..._buildKeys(['Z', 'X', 'C', 'V', 'B', 'N', 'M'], flex: 2),
@@ -42,24 +49,27 @@ class WordieKeyboard extends StatelessWidget {
   }
 
   List<Widget> _buildKeys(List<String> letters, {int flex = 1}) {
-    return letters.map((letter) {
-      Color keyColor = Colors.grey;
+    return letters
+        .map((letter) {
+          Color keyColor = Colors.grey;
 
-      if (correctLetters.contains(letter)) {
-        keyColor = Colors.green;
-      } else if (outOfPositionLetters.contains(letter)) {
-        keyColor = Colors.yellow;
-      } else if (incorrectLetters.contains(letter)) {
-        keyColor = Colors.black;
-      }
+          if (correctLetters.contains(letter)) {
+            keyColor = WordieColors.green;
+          } else if (outOfPositionLetters.contains(letter)) {
+            keyColor = WordieColors.yellow;
+          } else if (incorrectLetters.contains(letter)) {
+            keyColor = WordieColors.darkGrey;
+          }
 
-      return TextKey(
-        flex: flex,
-        text: letter, 
-        backgroundColor: keyColor,
-        onTextInput: _textInputHandler,
-      );
-    }).toList().cast<Widget>();
+          return TextKey(
+            flex: flex,
+            text: letter,
+            backgroundColor: keyColor,
+            onTextInput: _textInputHandler,
+          );
+        })
+        .toList()
+        .cast<Widget>();
   }
 
   void _textInputHandler(String text) => onTextInput?.call(text);

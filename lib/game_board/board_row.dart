@@ -13,32 +13,45 @@ class BoardRow extends StatelessWidget {
     required this.targetWord,
     required this.currentInput,
     required this.isSubmitted,
-  }) : _wordLength = targetWord.length, super(key: key);
+  })  : _wordLength = targetWord.length,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(
-        _wordLength, 
-        (index) {
-          final letter = currentInput != null 
-            ? index < currentInput!.length ? currentInput![index] : null
-            : null;
-          final isCorrect = letter != null && letter == targetWord[index];
-          bool isInWord = !isCorrect && letter != null && targetWord.contains(letter);
-          if (isInWord) {
-            final letterCountInGuessSoFar = currentInput?.substring(0, index + 1)
-              .characters
-              .where((char) => char == letter)
-              .length ?? 0;
-            final letterCountInAnswer = targetWord.characters.where((char) => char == letter).length;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        children: List.generate(_wordLength, (index) {
+          final letter = currentInput != null
+              ? index < currentInput!.length
+                  ? currentInput![index]
+                  : null
+              : null;
 
-            // only count appearances of a given letter up to the number of times that letters appears in
-            // the target word. For examples, if the target word is "PLEAT", only count the first "L"
-            // in "HELLO". The second "L" is not considered to be in the target word and is therefore incorrect.
-            isInWord = letterCountInGuessSoFar <= letterCountInAnswer;
+          bool isCorrect = false;
+          bool isInWord = false;
+
+          if (letter != null && targetWord.contains(letter)) {
+            if (letter == targetWord[index]) {
+              isCorrect = true;
+            }
+
+            final numLetterToThisPoint = currentInput!
+                .substring(0, index + 1)
+                .characters
+                .where((it) => it == letter)
+                .length;
+            final numLetterInWord =
+                targetWord.characters.where((it) => it == letter).length;
+
+            if (!isCorrect &&
+                targetWord.indexOf(letter) < currentInput!.length &&
+                currentInput![targetWord.indexOf(letter)] != letter &&
+                numLetterToThisPoint <= numLetterInWord) {
+              isInWord = true;
+            }
           }
-          
+
           GameTileState tileState = GameTileState.empty;
 
           if (isSubmitted && isCorrect) {
@@ -61,7 +74,7 @@ class BoardRow extends StatelessWidget {
               ),
             ),
           );
-        }
+        }),
       ),
     );
   }

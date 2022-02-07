@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wordie/colors.dart';
 
 class GameTile extends StatelessWidget {
   final GameTileState tileState;
@@ -8,60 +9,65 @@ class GameTile extends StatelessWidget {
     Key? key,
     required this.tileState,
     this.letter,
-  }): super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: _borderColorForTileState(tileState)),
-        color: _backgroundColorForTileState(tileState),
+    return Padding(
+      padding: const EdgeInsets.all(3),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: _borderColorForTileState(tileState),
+            width: 3,
+          ),
+          color: _backgroundColorForTileState(tileState),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+        ),
+        child: letter != null
+            ? Center(
+                child: Text(
+                  letter!,
+                  style: Theme.of(context).textTheme.headline4?.copyWith(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              )
+            : const SizedBox(),
       ),
-      child: letter != null 
-        ? Center(
-            child: Text(letter!, 
-              style: Theme.of(context).textTheme.headline4?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
-            ),
-          ) 
-        : const SizedBox(),
     );
   }
 }
 
-enum GameTileState {
-  empty,
-  pending,
-  incorrect,
-  outOfPosition,
-  correct
-}
+enum GameTileState { empty, pending, incorrect, outOfPosition, correct }
 
 Color _backgroundColorForTileState(GameTileState tileState) {
   switch (tileState) {
     case GameTileState.empty:
     case GameTileState.pending:
-      return Colors.black;
+      return Colors.transparent;
     case GameTileState.incorrect:
-      return Colors.black38;
+      return WordieColors.darkGrey;
     case GameTileState.outOfPosition:
-      return Colors.yellow;
+      return WordieColors.yellow;
     case GameTileState.correct:
-      return Colors.green;
+      return WordieColors.green;
   }
 }
 
 Color _borderColorForTileState(GameTileState tileState) {
   switch (tileState) {
     case GameTileState.empty:
-      return Colors.grey;
+      return WordieColors.darkGrey;
     case GameTileState.pending:
-      return Colors.blueGrey;
+      return Colors.grey.shade700;
     case GameTileState.incorrect:
-      return Colors.black38;
+      return WordieColors.darkGrey;
     case GameTileState.outOfPosition:
-      return Colors.yellow;
+      return WordieColors.yellow;
     case GameTileState.correct:
-      return Colors.green;
+      return WordieColors.green;
   }
 }

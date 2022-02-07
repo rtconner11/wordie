@@ -18,7 +18,7 @@ class BackspaceKey extends InputKey {
   @override
   Widget contentWidget(BuildContext context) {
     return const Icon(
-      Icons.backspace_outlined, 
+      Icons.backspace_outlined,
       color: Colors.white,
     );
   }

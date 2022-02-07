@@ -1,4 +1,6 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wordie/game_board/board_row.dart';
 import 'package:wordie/keyboard/keyboard.dart';
 
@@ -12,7 +14,8 @@ class WordieGame extends StatefulWidget {
     Key? key,
     required this.word,
     required this.numberOfGuesses,
-  }) : _wordLength = word.length, super(key: key);
+  })  : _wordLength = word.length,
+        super(key: key);
 
   @override
   State<WordieGame> createState() => _WordieGameState();
@@ -44,70 +47,49 @@ class _WordieGameState extends State<WordieGame> {
     _outOfPositionLetters = {};
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          ..._buildBoardRows(),
-          const Spacer(),
-          WordieKeyboard(
-            correctLetters: _correctLetters,
-            incorrectLetters: _incorrectLetters,
-            outOfPositionLetters: _outOfPositionLetters,
-            onTextInput: (text) {
-              if (_isSolved) return;
+  void _onTextInputted(String newText) {
+    if (_isSolved) return;
 
-              if (_currentInput.length < widget._wordLength) {
-                setState(() {
-                  _currentInput += text;
-                });
-              }
-            },
-            onEnter: () {
-              if (_currentInput.length == widget._wordLength) {
-                _handleSubmission();
-              }
-            },
-            onBackspace: () {
-              if (_currentInput.isNotEmpty) {
-                setState(() {
-                  _currentInput = _currentInput.substring(0, _currentInput.length - 1);
-                });
-              }
-            },
-          ),
-        ],
-      ),
-    );
+    if (_currentInput.length < widget._wordLength) {
+      setState(() {
+        _currentInput += newText;
+      });
+    }
   }
 
-  List<Widget> _buildBoardRows() {
-    return List.generate(widget.numberOfGuesses, (index) {
-      String? guess;
-      if (index < _guesses.length) {
-        guess = _guesses[index];
-      }
-      
-      String? rowInput;
-      if (guess != null) {
-        rowInput = guess;
+  void _onEnterPressed() {
+    if (_currentInput.length == widget._wordLength) {
+      if (all
+          .where((word) => word.length == widget._wordLength)
+          .contains(_currentInput.toLowerCase())) {
+        _handleSubmission();
       } else {
-        if (index == _guesses.length) {
-          rowInput = _currentInput;
-        } else {
-          rowInput = null;
-        }
+        Fluttertoast.showToast(
+          msg: 'Please enter a valid  ${widget._wordLength}-letter word',
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+        );
+        setState(() {
+          _currentInput = '';
+        });
       }
-
-      return BoardRow(
-        key: Key('board_row_$index'),
-        targetWord: widget.word.toUpperCase(), 
-        currentInput: rowInput, 
-        isSubmitted: guess != null
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Please enter a ${widget._wordLength}-letter word',
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
       );
-    });
+    }
+  }
+
+  void _onBackspacePressed() {
+    if (_currentInput.isNotEmpty) {
+      setState(() {
+        _currentInput = _currentInput.substring(0, _currentInput.length - 1);
+      });
+    }
   }
 
   void _handleSubmission() {
@@ -145,6 +127,54 @@ class _WordieGameState extends State<WordieGame> {
       _incorrectLetters.addAll(incorrect);
 
       _outOfPositionLetters.addAll(outOfPosition);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          ..._buildBoardRows(),
+          const Spacer(),
+          WordieKeyboard(
+            correctLetters: _correctLetters,
+            incorrectLetters: _incorrectLetters,
+            outOfPositionLetters: _outOfPositionLetters,
+            onTextInput: _onTextInputted,
+            onEnter: _onEnterPressed,
+            onBackspace: _onBackspacePressed,
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildBoardRows() {
+    return List.generate(widget.numberOfGuesses, (index) {
+      String? guess;
+      if (index < _guesses.length) {
+        guess = _guesses[index];
+      }
+
+      String? rowInput;
+      if (guess != null) {
+        rowInput = guess;
+      } else {
+        if (index == _guesses.length) {
+          rowInput = _currentInput;
+        } else {
+          rowInput = null;
+        }
+      }
+
+      return BoardRow(
+        key: Key('board_row_$index'),
+        targetWord: widget.word.toUpperCase(),
+        currentInput: rowInput,
+        isSubmitted: guess != null,
+      );
     });
   }
 }

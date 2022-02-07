@@ -17,12 +17,13 @@ class EnterKey extends InputKey {
 
   @override
   Widget contentWidget(BuildContext context) {
-    return Text('ENTER', 
+    return Text(
+      'ENTER',
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-        color: Colors.white, 
-        fontWeight: FontWeight.bold, 
-        fontSize: 12,
-      ),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
     );
   }
 }
