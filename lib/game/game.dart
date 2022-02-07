@@ -6,6 +6,7 @@ import 'package:wordie/game/bloc/game_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game_board/board_row.dart';
 import 'package:wordie/keyboard/keyboard.dart';
+import 'package:wordie/util/toast_util.dart';
 
 class WordieGame extends StatefulWidget {
   final String word;
@@ -71,25 +72,13 @@ class _WordieGameState extends State<WordieGame> {
           .contains(_currentInput.toLowerCase())) {
         _handleSubmission();
       } else {
-        Fluttertoast.showToast(
-          msg: 'Please enter a valid ${widget._wordLength}-letter word',
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Colors.white,
-          textColor: Colors.black,
-          toastLength: Toast.LENGTH_LONG,
-        );
+        showToast('Please enter a valid ${widget._wordLength}-letter word');
         setState(() {
           _currentInput = '';
         });
       }
     } else {
-      Fluttertoast.showToast(
-        msg: 'Please enter a ${widget._wordLength}-letter word',
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.white,
-        textColor: Colors.black,
-        toastLength: Toast.LENGTH_LONG,
-      );
+      showToast('Please enter a ${widget._wordLength}-letter word');
     }
   }
 

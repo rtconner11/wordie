@@ -1,17 +1,10 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
 
 abstract class GameEvent {}
 
-class NewGameRequested extends GameEvent {
-  final String word;
-  final int numberOfGuesses;
-
-  NewGameRequested({
-    required this.word,
-    required this.numberOfGuesses,
-  });
-}
+class NewGameRequested extends GameEvent {}
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc(
@@ -25,9 +18,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   void _onNewGameRequested(NewGameRequested event, Emitter<GameState> emit) {
+    final words = all.where((element) => element.length == 5).toList()
+      ..shuffle();
+    final word = words.first;
+
     emit(GameState(
-      word: event.word,
-      numberOfGuesses: event.numberOfGuesses,
+      word: word,
+      numberOfGuesses: word.length + 1,
     ));
   }
 }

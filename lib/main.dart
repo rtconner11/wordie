@@ -36,16 +36,36 @@ class MyApp extends StatelessWidget {
 class GameWindow extends StatelessWidget {
   const GameWindow({Key? key}) : super(key: key);
 
-  void _startNewGame(BuildContext context) {
-    final words = all.where((element) => element.length == 5).toList()
-      ..shuffle();
-    final word = words.first;
-
-    BlocProvider.of<GameBloc>(context).add(
-      NewGameRequested(
-        word: word,
-        numberOfGuesses: word.length + 1,
+  void _onNewGamePressed(BuildContext context) {
+    final yesButton = TextButton(
+      child: const Text(
+        'Yes',
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
+      onPressed: () {
+        Navigator.of(context).pop();
+        context.read<GameBloc>().add(NewGameRequested());
+      },
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('New Game'),
+          content: const Text('Would you like to start a new game?'),
+          actions: [
+            TextButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey.shade700),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            yesButton,
+          ],
+        );
+      },
     );
   }
 
@@ -56,9 +76,7 @@ class GameWindow extends StatelessWidget {
         title: const Text('Wordie'),
         actions: [
           IconButton(
-            onPressed: () {
-              _startNewGame(context);
-            },
+            onPressed: () => _onNewGamePressed(context),
             icon: const Icon(Icons.add),
           ),
         ],
