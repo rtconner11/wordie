@@ -1,6 +1,9 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:wordie/game/bloc/game_bloc.dart';
+import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game_board/board_row.dart';
 import 'package:wordie/keyboard/keyboard.dart';
 
@@ -36,6 +39,10 @@ class _WordieGameState extends State<WordieGame> {
   void initState() {
     super.initState();
 
+    _resetState();
+  }
+
+  void _resetState() {
     // Game Board State
     _guesses = [];
     _currentInput = '';
@@ -65,10 +72,11 @@ class _WordieGameState extends State<WordieGame> {
         _handleSubmission();
       } else {
         Fluttertoast.showToast(
-          msg: 'Please enter a valid  ${widget._wordLength}-letter word',
+          msg: 'Please enter a valid ${widget._wordLength}-letter word',
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.white,
           textColor: Colors.black,
+          toastLength: Toast.LENGTH_LONG,
         );
         setState(() {
           _currentInput = '';
@@ -80,6 +88,7 @@ class _WordieGameState extends State<WordieGame> {
         gravity: ToastGravity.CENTER,
         backgroundColor: Colors.white,
         textColor: Colors.black,
+        toastLength: Toast.LENGTH_LONG,
       );
     }
   }
@@ -132,21 +141,30 @@ class _WordieGameState extends State<WordieGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          ..._buildBoardRows(),
-          const Spacer(),
-          WordieKeyboard(
-            correctLetters: _correctLetters,
-            incorrectLetters: _incorrectLetters,
-            outOfPositionLetters: _outOfPositionLetters,
-            onTextInput: _onTextInputted,
-            onEnter: _onEnterPressed,
-            onBackspace: _onBackspacePressed,
-          ),
-        ],
+    return BlocListener<GameBloc, GameState>(
+      listener: (context, state) {
+        if (state.word != widget.word) {
+          setState(() {
+            _resetState();
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            ..._buildBoardRows(),
+            const Spacer(),
+            WordieKeyboard(
+              correctLetters: _correctLetters,
+              incorrectLetters: _incorrectLetters,
+              outOfPositionLetters: _outOfPositionLetters,
+              onTextInput: _onTextInputted,
+              onEnter: _onEnterPressed,
+              onBackspace: _onBackspacePressed,
+            ),
+          ],
+        ),
       ),
     );
   }

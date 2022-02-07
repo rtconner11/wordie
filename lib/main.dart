@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordie/game/bloc/game_bloc.dart';
+import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game/game.dart';
 
 void main() {
@@ -16,39 +19,60 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const GameWindow(),
+      home: BlocProvider(
+        create: (context) {
+          final words = all.where((element) => element.length == 5).toList()
+            ..shuffle();
+          final word = words.first;
+
+          return GameBloc(word, word.length + 1);
+        },
+        child: const GameWindow(),
+      ),
     );
   }
 }
 
-class GameWindow extends StatefulWidget {
+class GameWindow extends StatelessWidget {
   const GameWindow({Key? key}) : super(key: key);
 
-  @override
-  State<GameWindow> createState() => _GameWindowState();
-}
-
-class _GameWindowState extends State<GameWindow> {
-  String _word = '';
-
-  @override
-  void initState() {
-    super.initState();
-
+  void _startNewGame(BuildContext context) {
     final words = all.where((element) => element.length == 5).toList()
       ..shuffle();
-    _word = words.first;
+    final word = words.first;
+
+    BlocProvider.of<GameBloc>(context).add(
+      NewGameRequested(
+        word: word,
+        numberOfGuesses: word.length + 1,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Wordie'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _startNewGame(context);
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
       backgroundColor: Colors.grey.shade900,
-      body: const SafeArea(
+      body: SafeArea(
         child: SizedBox.expand(
-          child: WordieGame(
-            word: "CAUSE",
-            numberOfGuesses: 6,
+          child: BlocBuilder<GameBloc, GameState>(
+            builder: (context, state) {
+              return WordieGame(
+                word: state.word,
+                numberOfGuesses: state.numberOfGuesses,
+              );
+            },
           ),
         ),
       ),

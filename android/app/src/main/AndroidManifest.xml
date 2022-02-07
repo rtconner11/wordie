@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wordie">
    <application
-        android:label="wordie"
+        android:label="Wordie"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
