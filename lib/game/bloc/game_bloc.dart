@@ -11,20 +11,18 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   GameBloc(
     this.wordRepository,
-  ) : super(GameState(
-          word: wordRepository.words.first,
-          numberOfGuesses: wordRepository.words.first.length + 1,
-        )) {
+  ) : super(GameState.emptyState()) {
     on<NewGameRequested>(_onNewGameRequested);
   }
 
   void _onNewGameRequested(NewGameRequested event, Emitter<GameState> emit) {
-    wordRepository.words.shuffle();
-    final word = wordRepository.words.first;
+    final word = wordRepository.getNewAnswerWord();
 
-    emit(GameState(
-      word: word,
-      numberOfGuesses: word.length + 1,
-    ));
+    if (word != null) {
+      emit(GameState(
+        word: word,
+        numberOfGuesses: word.length + 1,
+      ));
+    }
   }
 }

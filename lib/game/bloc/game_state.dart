@@ -7,6 +7,11 @@ class GameState {
     required this.numberOfGuesses,
   });
 
+  factory GameState.emptyState() => const GameState(
+        word: '',
+        numberOfGuesses: 0,
+      );
+
   GameState copyWith({
     String? word,
     int? numberOfGuesses,
