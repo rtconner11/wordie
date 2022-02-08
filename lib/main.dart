@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:wordie/game/bloc/game_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game/game.dart';
+import 'package:wordie/repository/word_repository.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() => runApp(const Root());
+
+class Root extends StatefulWidget {
+  const Root({Key? key}) : super(key: key);
+
+  @override
+  State<Root> createState() => _RootState();
+}
+
+class _RootState extends State<Root> {
+  List<String> words = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadData();
+  }
+
+  void _loadData() async {
+    final result = await rootBundle.loadString('assets/words.txt');
+    List<String> words = result.split('\n');
+    words.shuffle();
+
+    setState(() {
+      this.words = words;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return words.isNotEmpty
+        ? RepositoryProvider(
+            create: (context) => WordRepository(words: words),
+            child: const MyApp(),
+          )
+        : const Center(child: CircularProgressIndicator());
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -14,20 +52,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wordie',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-        create: (context) {
-          final words = all.where((element) => element.length == 5).toList()
-            ..shuffle();
-          final word = words.first;
-
-          return GameBloc(word, word.length + 1);
-        },
-        child: const GameWindow(),
+    return OKToast(
+      child: MaterialApp(
+        title: 'Wordie',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: BlocProvider(
+          create: (context) => GameBloc(context.read<WordRepository>()),
+          child: const GameWindow(),
+        ),
       ),
     );
   }

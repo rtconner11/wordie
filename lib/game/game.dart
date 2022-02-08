@@ -1,11 +1,10 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wordie/game/bloc/game_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game_board/board_row.dart';
 import 'package:wordie/keyboard/keyboard.dart';
+import 'package:wordie/repository/word_repository.dart';
 import 'package:wordie/util/toast_util.dart';
 
 class WordieGame extends StatefulWidget {
@@ -65,20 +64,22 @@ class _WordieGameState extends State<WordieGame> {
     }
   }
 
-  void _onEnterPressed() {
+  void _onEnterPressed(BuildContext context) {
     if (_currentInput.length == widget._wordLength) {
-      if (all
-          .where((word) => word.length == widget._wordLength)
-          .contains(_currentInput.toLowerCase())) {
+      final wordRepo = context.read<WordRepository>();
+
+      if (wordRepo.words.contains(_currentInput.toLowerCase())) {
         _handleSubmission();
       } else {
-        showToast('Please enter a valid ${widget._wordLength}-letter word');
+        showWordieToast(
+          'Please enter a valid ${widget._wordLength}-letter word',
+        );
         setState(() {
           _currentInput = '';
         });
       }
     } else {
-      showToast('Please enter a ${widget._wordLength}-letter word');
+      showWordieToast('Please enter a ${widget._wordLength}-letter word');
     }
   }
 
@@ -149,7 +150,7 @@ class _WordieGameState extends State<WordieGame> {
               incorrectLetters: _incorrectLetters,
               outOfPositionLetters: _outOfPositionLetters,
               onTextInput: _onTextInputted,
-              onEnter: _onEnterPressed,
+              onEnter: () => _onEnterPressed(context),
               onBackspace: _onBackspacePressed,
             ),
           ],

@@ -24,9 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  english_words: ^4.0.0
-  fluttertoast: ^8.0.8
   flutter_bloc: ^8.0.1
+  oktoast: ^3.1.5
 
 dev_dependencies:
   flutter_test:
@@ -42,7 +41,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  assets:
+    - assets/words.txt
+    
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

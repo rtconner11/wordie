@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 
-void showToast(String text) {
-  Fluttertoast.showToast(
-    msg: text,
-    gravity: ToastGravity.CENTER,
-    backgroundColor: Colors.white,
-    textColor: Colors.black,
-    toastLength: Toast.LENGTH_LONG,
+void showWordieToast(String text) {
+  showToast(
+    text,
+    textPadding: const EdgeInsets.all(16.0),
+    backgroundColor: Colors.red.shade300,
+    textStyle: const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
   );
 }
