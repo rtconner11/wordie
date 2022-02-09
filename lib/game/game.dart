@@ -65,10 +65,13 @@ class _WordieGameState extends State<WordieGame> {
   }
 
   void _onEnterPressed(BuildContext context) {
+    if (_isSolved) return;
+    
     if (_currentInput.length == widget._wordLength) {
       final wordRepo = context.read<WordRepository>();
 
-      if (wordRepo.words.contains(_currentInput.toLowerCase())) {
+      if (_currentInput == widget.word ||
+          wordRepo.isWordValid(_currentInput.toLowerCase())) {
         _handleSubmission();
       } else {
         showWordieToast(

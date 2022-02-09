@@ -22,6 +22,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       StartInitialDataLoad event, Emitter<DataState> emit) async {
     emit(state.copyWith(
       isLoading: true,
+      loadSucceeded: false,
     ));
 
     await wordRepository.loadWords();

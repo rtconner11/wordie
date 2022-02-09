@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:wordie/game/bloc/game_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game/game.dart';
-import 'package:wordie/repository/word_repository.dart';
 
 class GameWindow extends StatelessWidget {
   const GameWindow({Key? key}) : super(key: key);
@@ -44,38 +42,26 @@ class GameWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-      child: MaterialApp(
-        title: 'Wordie',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: BlocProvider(
-          create: (context) =>
-              GameBloc(context.read<WordRepository>())..add(NewGameRequested()),
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Wordie'),
-              actions: [
-                IconButton(
-                  onPressed: () => _onNewGamePressed(context),
-                  icon: const Icon(Icons.add),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.grey.shade900,
-            body: SafeArea(
-              child: SizedBox.expand(
-                child: BlocBuilder<GameBloc, GameState>(
-                  builder: (context, state) {
-                    return WordieGame(
-                      word: state.word,
-                      numberOfGuesses: state.numberOfGuesses,
-                    );
-                  },
-                ),
-              ),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Wordie'),
+        actions: [
+          IconButton(
+            onPressed: () => _onNewGamePressed(context),
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.grey.shade900,
+      body: SafeArea(
+        child: SizedBox.expand(
+          child: BlocBuilder<GameBloc, GameState>(
+            builder: (context, state) {
+              return WordieGame(
+                word: state.word,
+                numberOfGuesses: state.numberOfGuesses,
+              );
+            },
           ),
         ),
       ),

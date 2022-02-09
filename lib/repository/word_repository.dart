@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 
 class WordRepository {
-  List<String> words = [];
   late Box? _wordBox;
 
   WordRepository();
@@ -32,7 +31,7 @@ class WordRepository {
   }
 
   String? getNewAnswerWord() {
-    final letter = [
+    final letters = [
       'a',
       'b',
       'c',
@@ -60,8 +59,8 @@ class WordRepository {
       'y',
       'z',
     ]..shuffle();
-    final wordMap = _wordBox?.get('answerWords') as Map<String, List<String>>?;
-    final wordsForLetter = wordMap?[letter];
+    final wordMap = _wordBox?.get('answerWords');
+    final wordsForLetter = wordMap?[letters.first];
 
     if (wordsForLetter != null) {
       wordsForLetter.shuffle();
@@ -70,5 +69,17 @@ class WordRepository {
     }
 
     return null;
+  }
+
+  bool isWordValid(String word) {
+    if (_wordBox == null) return false;
+
+    final answerMap = _wordBox!.get('answerWords');
+    final additionalWordsMap = _wordBox!.get('additionalWords');
+
+    final firstLetter = word.characters.first;
+
+    return (answerMap[firstLetter]?.contains(word) ?? false) ||
+        (additionalWordsMap[firstLetter]?.contains(word) ?? false);
   }
 }
