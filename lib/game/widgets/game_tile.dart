@@ -22,7 +22,7 @@ class GameTile extends StatelessWidget {
             width: 3,
           ),
           color: _backgroundColorForTileState(tileState),
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
         ),
         child: letter != null
             ? Center(

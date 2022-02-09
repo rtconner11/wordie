@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordie/game/bloc/game_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
-import 'package:wordie/game_board/board_row.dart';
+import 'package:wordie/game/widgets/board_row.dart';
 import 'package:wordie/keyboard/keyboard.dart';
 import 'package:wordie/repository/word_repository.dart';
 import 'package:wordie/util/toast_util.dart';
@@ -66,7 +66,7 @@ class _WordieGameState extends State<WordieGame> {
 
   void _onEnterPressed(BuildContext context) {
     if (_isSolved) return;
-    
+
     if (_currentInput.length == widget._wordLength) {
       final wordRepo = context.read<WordRepository>();
 

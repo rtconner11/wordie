@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordie/game_board/game_tile.dart';
+import 'package:wordie/game/widgets/game_tile.dart';
 
 class BoardRow extends StatelessWidget {
   final String targetWord;

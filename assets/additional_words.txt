@@ -6617,7 +6617,6 @@ parps
 parra
 parrs
 parti
-parts
 parve
 parvo
 paseo

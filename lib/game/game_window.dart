@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordie/game/bloc/game_bloc.dart';
 import 'package:wordie/game/bloc/game_state.dart';
 import 'package:wordie/game/game.dart';
+import 'package:wordie/help/how_to_play.dart';
 
 class GameWindow extends StatelessWidget {
   const GameWindow({Key? key}) : super(key: key);
@@ -40,6 +41,28 @@ class GameWindow extends StatelessWidget {
     );
   }
 
+  void _onHelpTapped(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: const HowToPlay(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +73,19 @@ class GameWindow extends StatelessWidget {
             onPressed: () => _onNewGamePressed(context),
             icon: const Icon(Icons.add),
           ),
+          PopupMenuButton(
+              icon: const Icon(Icons.more_vert),
+              onSelected: (item) {
+                if (item == 'Help') {
+                  _onHelpTapped(context);
+                }
+              },
+              itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: 'Help',
+                      child: Text('Help'),
+                    ),
+                  ]),
         ],
       ),
       backgroundColor: Colors.grey.shade900,
