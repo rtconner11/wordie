@@ -12,37 +12,36 @@ class HowToPlay extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
-            padding: EdgeInsets.only(bottom: 16.0),
-            child: Text('Guess the word before you run out of tries.'),
-          ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 0, 16),
-            child: Text('• Guesses must be valid words'),
-          ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 0, 16),
-            child: Text('• Guesses must use all available spaces'),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text('• Press ENTER to submit a guess'),
+            padding: EdgeInsets.only(bottom: 0.0),
+            child: Text.rich(
+              TextSpan(
+                text: '',
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'GUESS',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text:
+                        ' valid 5-letter words and find the answer within 6 tries.',
+                  ),
+                ],
+              ),
+            ),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16.0),
             child: Text(
-                'Green and yellow tiles give you information about what letters are in the answer.'),
+                'Green and yellow tiles tell you which letters are in the answer.'),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
-            child: Row(
-              children: _buildWordExampleTiles(),
-            ),
+          Row(
+            children: _buildWordExampleTiles(),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 16.0),
             child: Text.rich(
               TextSpan(
-                text: 'In this example, the letter ',
+                text: 'In this guess, the letter ',
                 children: <TextSpan>[
                   TextSpan(
                     text: 'P',
@@ -63,14 +62,7 @@ class HowToPlay extends StatelessWidget {
                     text: 'E, C, and H',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(text: ' are not in the answer at all.\n\n'),
-                  TextSpan(
-                    text: 'PARTS',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(
-                      text:
-                          ' is one possible answer that fits this information.'),
+                  TextSpan(text: ' are not in the answer at all.'),
                 ],
               ),
             ),

@@ -18,7 +18,7 @@ class EnterKey extends InputKey {
   @override
   Widget contentWidget(BuildContext context) {
     return Text(
-      'ENTER',
+      'GUESS',
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,

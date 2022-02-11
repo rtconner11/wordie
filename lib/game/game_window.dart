@@ -47,6 +47,7 @@ class GameWindow extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           content: const HowToPlay(),
+          title: const Text('How To Play'),
           actions: [
             TextButton(
               onPressed: () {
@@ -83,7 +84,7 @@ class GameWindow extends StatelessWidget {
               itemBuilder: (context) => const [
                     PopupMenuItem(
                       value: 'Help',
-                      child: Text('Help'),
+                      child: Text('How To Play'),
                     ),
                   ]),
         ],
